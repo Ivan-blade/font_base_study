@@ -181,3 +181,548 @@
             ```
 
 ### map与set
++ map
+    + map对象
+        + Map 对象保存键值对。任何值(对象或者原始值) 都可以作为一个键或一个值。
+    + map和object的区别
+        + 一个 Object 的键只能是字符串或者 Symbols，但一个 Map 的键可以是任意值。
+        + Map 中的键值是有序的（FIFO 原则），而添加到对象中的键则不是。
+        + Map 的键值对个数可以从 size 属性获取，而 Object 的键值对个数只能手动计算。
+        + Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突。
+    + map中的key
+        + key是字符串
+            ```
+                var myMap = new Map();
+                var keyString = "a string"; 
+                
+                myMap.set(keyString, "和键'a string'关联的值");
+                
+                myMap.get(keyString);    // "和键'a string'关联的值"
+                myMap.get("a string");   // "和键'a string'关联的值"
+                // 两种方式获取的结果相同因为 keyString === 'a string'
+            ```
+        + key是对象
+            ```
+                var myMap = new Map();
+                var keyObj = {}, 
+                
+                myMap.set(keyObj, "和键 keyObj 关联的值");
+                myMap.get(keyObj); // "和键 keyObj 关联的值"
+                myMap.get({}); // undefined, 因为 keyObj !== {}
+            ```
+        + key是函数
+            ```
+                var myMap = new Map();
+                var keyFunc = function () {}, // 函数
+                
+                myMap.set(keyFunc, "和键 keyFunc 关联的值");
+                
+                myMap.get(keyFunc); // "和键 keyFunc 关联的值"
+                myMap.get(function() {}) // undefined, 因为 keyFunc !== function () {}
+            ```
+        + key是NAN（这个有什么应用场景吗）
+            ```
+                var myMap = new Map();
+                myMap.set(NaN, "not a number");
+                
+                myMap.get(NaN); // "not a number"
+                
+                var otherNaN = Number("foo");       // 此时的otherNaN值为NAN
+                myMap.get(otherNaN); // "not a number" 
+                // 虽然 NaN 和任何值甚至和自己都不相等(NaN !== NaN 返回true)，NaN作为Map的键来说是没有区别的。
+            ```
+    + map的迭代方式
+        + for...of
+            ```
+                var myMap = new Map();
+                myMap.set(0, "zero");
+                myMap.set(1, "one");
+                
+                // 将会显示两个 log。 一个是 "0 = zero" 另一个是 "1 = one"
+                for (var [key, value] of myMap) {
+                    console.log(key + " = " + value);
+                }
+                for (var [key, value] of myMap.entries()) {
+                    console.log(key + " = " + value);
+                }
+                /* 这个 entries 方法返回一个新的 Iterator 对象，它按插入顺序包含了 Map 对象中每个元素的 [key, value] 数组。 
+                * problems: 这两种方法有什么区别呢
+                */
+                
+                // 将会显示两个log。 一个是 "0" 另一个是 "1"
+                for (var key of myMap.keys()) {
+                    console.log(key);
+                }
+                /* 这个 keys 方法返回一个新的 Iterator 对象， 它按插入顺序包含了 Map 对象中每个元素的键。 */
+                
+                // 将会显示两个log。 一个是 "zero" 另一个是 "one"
+                for (var value of myMap.values()) {
+                    console.log(value);
+                }
+                /* 这个 values 方法返回一个新的 Iterator 对象，它按插入顺序包含了 Map 对象中每个元素的值。 */
+            ```
+        + foreach
+            ```
+                var myMap = new Map();
+                myMap.set(0, "zero");
+                myMap.set(1, "one");
+                
+                // 将会显示两个 logs。 一个是 "0 = zero" 另一个是 "1 = one"
+                myMap.forEach(function(value, key) {
+                    console.log(key + " = " + value);
+                }, myMap)
+                // problems：这边的foreach最后为什么要加myMap呢？不加好像也没什么影响？
+            ```
+    + map对象的操作
+        + map与array的转换
+            ```
+                var kvArray = [["key1", "value1"], ["key2", "value2"]];
+    
+                // Map 构造函数可以将一个 二维 键值对数组转换成一个 Map 对象
+                var myMap = new Map(kvArray);
+                
+                // 使用 Array.from 函数可以将一个 Map 对象转换成一个二维键值对数组
+                var outArray = Array.from(myMap);
+            ```
+        + map的克隆
+            ```
+                var myMap1 = new Map([["key1", "value1"], ["key2", "value2"]]);
+                var myMap2 = new Map(myMap1);
+                
+                console.log(original === clone); 
+                // 打印 false。 Map 对象构造函数生成实例，迭代出新的对象。
+                // problems它想表达什么？original和clone并没有声明应该是内置变量，他们代表了什么？
+            ```
+        + map的合并
+            ```
+                var first = new Map([[1, 'one'], [2, 'two'], [3, 'three'],]);
+                var second = new Map([[1, 'uno'], [2, 'dos']]);
+                
+                // 合并两个 Map 对象时，如果有重复的键值，则后面的会覆盖前面的，对应值即 uno，dos， three
+                var merged = new Map([...first, ...second]);
+                console.log(merged)
+
+                // problems 为什么这边first代表一个map但是合并时不能用first而要用...first呢？
+            ```
++ set
+    + set对象
+        + Set 对象允许你存储任何类型的唯一值，无论是原始值或者是对象引用。
+    + set中的特殊值
+        + Set 对象存储的值总是唯一的，所以需要判断两个值是否恒等。有几个特殊值需要特殊对待：
+            + +0 与 -0 在存储判断唯一性的时候是恒等的，所以不重复；
+            + undefined 与 undefined 是恒等的，所以不重复；
+            + NaN 与 NaN 是不恒等的，但是在 Set 中只能存一个，不重复。
+    + 代码
+        ```
+            let mySet = new Set();
+ 
+            mySet.add(1); // Set(1) {1}
+            mySet.add(5); // Set(2) {1, 5}
+            mySet.add(5); // Set(2) {1, 5} 这里体现了值的唯一性
+            mySet.add("some text"); 
+            // Set(3) {1, 5, "some text"} 这里体现了类型的多样性
+            var o = {a: 1, b: 2}; 
+            mySet.add(o);
+            mySet.add({a: 1, b: 2}); 
+            // Set(5) {1, 5, "some text", {…}, {…}} 
+            // 这里体现了对象之间引用不同不恒等，即使值相同，Set 也能存储
+        ```
+    + 类型转换
+        + Array
+            ```
+                // Array 转 Set
+                var myarr = ["value1", "value2", "value3"];
+                var mySet = new Set(myarr);
+                // 用...操作符，将集合转换为数组 Set 转 Array
+                var myArray = [...mySet];
+                String
+                // String 转 Set
+                var mySet = new Set('hello');  // Set(4) {"h", "e", "l", "o"}
+                // 注：Set 中 toString 方法是不能将 Set 转换成 String
+            ```
+    + set对象作用
+        + 并集
+            ```
+                var a = new Set([1, 2, 3]);
+                var b = new Set([4, 3, 2]);
+                var union = new Set([...a, ...b]); // {1,2,3,4}
+                // 如果使用var union = new Set([a, b]);那么union就是包含了a，b两个集合的集合位{Set(3),Set(3)}
+            ```
+        + 数组去重
+            ```
+                var mySet = new Set([1, 2, 3, 4, 4]);
+                [...mySet]; // [1, 2, 3, 4]
+            ```
+        + 交集
+            ```
+                var a = new Set([1, 2, 3]);
+                var b = new Set([4, 3, 2]);
+                var intersect = new Set([...a].filter(x => b.has(x))); // {2, 3}
+            ```
+        + 差集
+            ```
+                var a = new Set([1, 2, 3]);
+                var b = new Set([4, 3, 2]);
+                var difference = new Set([...a].filter(x => !b.has(x))); // {1}
+            ```
+        + filter()方法
+            + 简介
+                + filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+                + 注意： filter() 不会对空数组进行检测。
+                + 注意： filter() 不会改变原始数组。
+            + 用法
+                ```
+                    array.filter(function(currentValue,index,arr), thisValue)
+                    currentValue	必须。当前元素的值
+                    index	可选。当前元素的索引值
+                    arr	可选。当前元素属于的数组对象
+                    thisValue	可选。对象作为该执行回调时使用，传递给函数，用作 "this" 的值。
+                    如果省略了 thisValue ，"this" 的值为 "undefined"
+                ```
+
+### 字符串
++ 拓展方法
+    + 子串识别
+        + ES6 之前判断字符串是否包含子串，用 indexOf 方法，ES6 新增了子串的识别方法。
+        + includes()：返回布尔值，判断是否找到参数字符串。
+        + startsWith()：返回布尔值，判断参数字符串是否在原字符串的头部。
+        + endsWith()：返回布尔值，判断参数字符串是否在原字符串的尾部
+            ```
+                let string = "apple,banana,orange";
+                string.includes("banana");     // true
+                string.startsWith("apple");    // true
+                string.endsWith("apple");      // false
+                string.startsWith("banana",6)  // true
+            ```
+        + 注意这三个方法只返回布尔值，如果需要知道子串的位置，还是得用 indexOf 和 lastIndexOf 。
+        + 这三个方法如果传入了正则表达式而不是字符串，会抛出错误。而 indexOf 和 lastIndexOf 这两个方法，它们会将正则表达式转换为字符串并搜索它。
+
++ 模板字符串
+    + 模板字符串相当于加强版的字符串，用反引号 `,除了作为普通字符串，还可以用来定义多行字符串，还可以在字符串中加入变量和表达式。
+        + 普通字符串
+            ```
+                let string = `Hello'\n'world`;
+                console.log(string); 
+                // "Hello'
+                // 'world"
+            ```
+        + 多行字符串
+            ```
+                let string1 =  `Hey,
+                can you stop angry now?`;
+                console.log(string1);
+                // Hey,
+                // can you stop angry now?
+            ```
+        + 字符串中加入变量和表达式
+            ```
+                let name = "Mike";
+                let age = 27;
+                let info = `My Name is ${name},I am ${age+1} years old next year.`
+                console.log(info);
+                // My Name is Mike,I am 28 years old next year.
+            ```
+        + 字符串中调用表达式
+            ```
+                function f(){
+                    return "have fun!";
+                }
+                let string2= `Game start,${f()}`;
+                console.log(string2);  // Game start,have fun!
+            ```
+        + 模板字符串中的换行和字符都是会被保留的
++ 标签模板
+    + 标签模板，是一个函数的调用，其中调用的参数是模板字符串。
+        ```
+            alert`Hello world!`;
+            // 等价于
+            alert('Hello world!');
+        ```
+    + 当模板字符串中带有变量，会将模板字符串参数处理成多个参数
+        ```
+            function f(stringArr,...values){
+            let result = "";
+            for(let i=0;i<stringArr.length;i++){
+            result += stringArr[i];
+            if(values[i]){
+            result += values[i];
+                    }
+                }
+            return result;
+            }
+            let name = 'Mike';
+            let age = 27;
+            f`My Name is ${name},I am ${age+1} years old next year.`;
+            // "My Name is Mike,I am 28 years old next year."
+            
+            f`My Name is ${name},I am ${age+1} years old next year.`;
+            // 等价于
+            f(['My Name is',',I am ',' years old next year.'],'Mike',28);
+        ```
+    + 应用过滤字符串，防止输入恶意内容（前端过滤有意义吗？截包直接改啊。。。https加密内容不清楚第三方有没有加解密方式，如果没有，可能安全性比较高，不过主要还是后端吧）
+        ```
+            function f(stringArr,...values){
+            let result = "";
+            for(let i=0;i<stringArr.length;i++){
+            result += stringArr[i];
+            if(values[i]){
+                result += String(values[i]).replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+                }
+            }
+            return result;
+            }
+            name = '<Amy&MIke>';
+            f`<p>Hi, ${name}.I would like send you some message.</p>`;
+            // <p>Hi, &lt;Amy&amp;MIke&gt;.I would like send you some message.</p>
+        ```
++ 对象
+    + 对象字面量
+        + ES6允许对象的属性直接写变量，这时候属性名是变量名，属性值是变量值。
+        ```
+            const age = 12;
+            const name = "Amy";
+            const person = {age, name};
+            person   //{age: 12, name: "Amy"}
+            //等同于
+            const person = {age: age, name: name}
+        ```
+    + 方法名可以简写(哦豁。。。原来我一直用的简写方法。。。)
+        ```
+            const person = {
+            sayHi(){
+                console.log("Hi");
+              }
+            }
+            person.sayHi();  //"Hi"
+            //等同于
+            const person = {
+            sayHi:function(){
+                console.log("Hi");
+              }
+            }
+            person.sayHi();//"Hi"
+        ```
+    + 如果是generator函数需要在前面加*
+        ```
+            const obj = {
+            * myGenerator() {
+                yield 'hello world';
+              }
+            };
+            //等同于
+            const obj = {
+            myGenerator: function* () {
+                yield 'hello world';
+              }
+            };
+        ```
++ 对象的拓展运算符
+    + 拓展运算符（...）用于取出参数对象所有可遍历属性然后拷贝到当前对象。
+        + 基本用法
+            ```
+                let person = {name: "Amy", age: 15};
+                let someone = { ...person };
+                someone;  //{name: "Amy", age: 15}
+            ```
+        + 合并两个对象
+            ```
+                let age = {age: 15};
+                let name = {name: "Amy"};
+                let person = {...age, ...name};
+                person;  //{age: 15, name: "Amy"}
+            ```
+        + 注意：自定义的属性和拓展运算符对象里面属性的相同的时候：自定义的属性在拓展运算符后面，则拓展运算符对象内部同名的属性将被覆盖掉。
+            ```
+               let person = {name: "Amy", age: 15};
+                let someone = { ...person, name: "Mike", age: 17};
+                someone;  //{name: "Mike", age: 17} 
+            ```
+            + 自定义的属性在拓展运算度前面，则变成设置新对象默认属性值。
+                ```
+                    let person = {name: "Amy", age: 15};
+                    let someone = {name: "Mike", age: 17, ...person};
+                    someone;  //{name: "Amy", age: 15}
+
+                ```
+    + 对象新方法
+        + Object.assign(target, source_1, ···)用于将源对象的所有可枚举属性复制到目标对象中。
+            + 如果目标对象和源对象有同名属性，或者多个源对象有同名属性，则后面的属性会覆盖前面的属性。
+            + 如果该函数只有一个参数，当参数为对象时，直接返回该对象；当参数不是对象时，会先将参数转为对象然后返回。
+            ```
+                let target = {a: 1};
+                let object2 = {b: 2};
+                let object3 = {c: 3};
+                Object.assign(target,object2,object3);  
+                // 第一个参数是目标对象，后面的参数是源对象
+                target;  // {a: 1, b: 2, c: 3}
+            ```
+        + 注意assign是浅拷贝，当拷贝源和目标任意值变动后，两个参数将会自动同步
+            + 浅拷贝，只是单纯的复制了目标地址
+            + 深拷贝，单纯申请了内存空间存储拷贝的参数
+### 数组
++ 数组创建
+    + Array.of()将参数中所有的值转变为数组
+        ```
+            console.log(Array.of(1, 2, 3, 4)); // [1, 2, 3, 4]
+ 
+            // 参数值可为不同类型
+            console.log(Array.of(1, '2', true)); // [1, '2', true]
+            
+            // 参数为空时返回空数组
+            console.log(Array.of()); // []
+        ```
+    + Array.from()将类数组对象或可迭代对象转化为数组。
+        ```
+            // 参数为数组,返回与原数组一样的数组
+            console.log(Array.from([1, 2])); // [1, 2]
+            
+            // 参数含空位
+            console.log(Array.from([1, , 3])); // [1, undefined, 3]
+        ```
+    + 参数
+        ```
+            Array.from(arrayLike[, mapFn[, thisArg]])
+        ```
+        返回值为转换后的数组。
+
+        + arrayLike想要转换的类数组对象或可迭代对象。
+            ```
+                console.log(Array.from([1, 2, 3])); // [1, 2, 3]                
+            ```
+        + mapFn可选，map 函数，用于对每个元素进行处理，放入数组的是处理后的元素。
+            ```
+                console.log(Array.from([1, 2, 3], (n) => n * 2)); // [2, 4, 6]
+            ```
+        + thisArg可选，用于指定 map 函数执行时的 this 对象。
+            ```
+                let map = {
+                    do: function(n) {
+                        return n * 2;
+                    }
+                }
+                let arrayLike = [1, 2, 3];
+                console.log(Array.from(arrayLike, function (n){
+                    return this.do(n);
+                }, map)); // [2, 4, 6]
+            ```
+    + 转换可迭代对象
+        ```
+            console.log(Array.from(map));
+            console.log(Array.from(set));
+            console.log(Array.from(str));
+        ```
+    + 3.2.4太多了。。。
+
+### 箭头函数
++ 箭头函数提供了一种更加简洁的函数书写方式。基本语法是：
+    + 结构：参数 => 函数体
+    + 基本用法：
+        ```
+            var f = v => v;
+            //等价于
+            var f = function(a){
+            return a;
+            }
+            f(1);  //1
+            当箭头函数没有参数或者有多个参数，要用 () 括起来。
+
+            var f = (a,b) => a+b;
+            f(6,2);  //8
+            当箭头函数函数体有多行语句，用 {} 包裹起来，表示代码块，当只有一行语句，并且需要返回结果时，可以省略 {} , 结果会自动返回。
+
+            var f = (a,b) => {
+            let result = a+b;
+            return result;
+            }
+            f(6,2);  // 8
+            当箭头函数要返回对象的时候，为了区分于代码块，要用 () 将对象包裹起来
+
+            // 报错
+            var f = (id,name) => {id: id, name: name};
+            f(6,2);  // SyntaxError: Unexpected token :
+            
+            // 不报错
+            var f = (id,name) => ({id: id, name: name});
+            f(6,2);  // {id: 6, name: 2}
+            注意点：没有 this、super、arguments 和 new.target 绑定。
+
+        ```
+    + 箭头函数中this指向
+        ```
+            var func = () => {
+            // 箭头函数里面没有 this 对象，
+            // 此时的 this 是外层的 this 对象，即 Window 
+            console.log(this)
+            }
+            func(55)  // Window 
+            
+            var func = () => {    
+            console.log(arguments)
+            }
+            func(55);  // ReferenceError: arguments is not defined
+        ```
+    + 箭头函数体中的 this 对象，是定义函数时的对象，而不是使用函数时的对象。
+        ```
+            function fn(){
+            setTimeout(()=>{
+                // 定义时，this 绑定的是 fn 中的 this 对象
+                console.log(this.a);
+            },0)
+            }
+            var a = 20;
+            // fn 的 this 对象为 {a: 19}
+            fn.call({a: 18});  // 18
+        ```
+    + 不可以作为构造函数，也就是不能使用 new 命令，否则会报错
+
+    + 适合使用的场景------ES6 之前，JavaScript 的 this 对象一直很令人头大，回调函数，经常看到 var self = this 这样的代码，为了将外部 this 传递到回调函数中，那么有了箭头函数，就不需要这样做了，直接使用 this 就行。
+        ```
+            // 回调函数
+            var Person = {
+                'age': 18,
+                'sayHello': function () {
+                setTimeout(function () {
+                    console.log(this.age);
+                });
+                }
+            };
+            var age = 20;
+            Person.sayHello();  // 20
+            
+            var Person1 = {
+                'age': 18,
+                'sayHello': function () {
+                setTimeout(()=>{
+                    console.log(this.age);
+                });
+                }
+            };
+            var age = 20;
+            Person1.sayHello();  // 18
+        ```
+    + 不适合使用的场景------定义函数的方法，且该方法中包含 this
+        ```
+            var Person = {
+                'age': 18,
+                'sayHello': ()=>{
+                    console.log(this.age);
+                }
+            };
+            var age = 20;
+            Person.sayHello();  // 20
+            // 此时 this 指向的是全局对象
+            
+            var Person1 = {
+                'age': 18,
+                'sayHello': function () {
+                    console.log(this.age);
+                }
+            };
+            var age = 20;
+            Person1.sayHello();   // 18
+            // 此时的 this 指向 Person1 对象
+        ```
+        problems：for...in和for..of的区别
+    + 看样子今天是极限了

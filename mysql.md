@@ -100,3 +100,9 @@
         ```
     + where作用于基表或者视图，从中选择满足条件的元组
     + having作用于组，选择满足条件的组
+
++ 嵌套查询
+    ```
+        SELECT  Sno，Sname，Sdept    
+         FROM  Student  WHERE ( SELECT Sdept FROM Student WHERE Sname= ‘ 刘晨 ’ ) = Sdept
+    ```

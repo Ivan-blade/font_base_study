@@ -253,7 +253,7 @@
         + 浏览器与远程Web服务器通过TCP三次握手协商来建立一个TCP/IP连接。该握手包括一个同步报文，一个同步-应答报文和一个应答报文，这三个报文在 浏览器和服务器之间传递。该握手首先由客户端尝试建立起通信，而后服务器应答并接受客户端的请求，最后由客户端发出该请求已经被接受的报文。
         + 一旦TCP/IP连接建立，浏览器会通过该连接向远程服务器发送HTTP的GET请求。远程服务器找到资源并使用HTTP响应返回该资源，值为200的HTTP响应状态表示一个正确的响应。
         + 此时，Web服务器提供资源服务，客户端开始下载资源。
-        +  请求返回后，便进入了我们关注的前端模块简单来说，浏览器会解析HTML生成DOM Tree，其次会根据CSS生成CSS Rule Tree，而javascript又可以根据DOM API操作DOM
+        +  请求返回后，便进入了我们关注的前端模块,简单来说，浏览器会解析HTML生成DOM Tree，其次会根据CSS生成CSS Rule Tree，而javascript又可以根据DOM API操作DOM
     + http状态码
         ```
             100  Continue  继续，一般在发送post请求时，已发送了http header之后服务端将返回此信息，表示确认，之后发送具体参数信息
@@ -306,3 +306,30 @@
         + ajax适合mvc项目，axios是尤雨溪推荐在mvvm项目中使用的异步请求
     + mvc
     + mvvm
+    + axios
+        + 从nodejs发起http请求
+        + 支持promiseAPI
+        ```
+            axios({
+                url: '/getUsers',
+                method: 'get',
+                responseType: 'json', // 默认的
+                data: {
+                    //'a': 1,
+                    //'b': 2,
+                }
+            }).then(function (response) {
+                console.log(response);
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error);
+                }）
+
+        ```
+    + 响应式设计
+        + 根据不同的设备呈现不同的布局
+        + 实现
+            + media queries可以进行媒介查询
+            + 使用浮动样式，宽度使用百分比样式
+    + 自适应设计
+        + 根据不同的设备设计不同的页面

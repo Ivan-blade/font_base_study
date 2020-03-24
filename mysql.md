@@ -104,5 +104,12 @@
 + 嵌套查询
     ```
         SELECT  Sno，Sname，Sdept    
-         FROM  Student  WHERE ( SELECT Sdept FROM Student WHERE Sname= ‘ 刘晨 ’ ) = Sdept
+        FROM  Student  WHERE ( SELECT Sdept FROM Student WHERE Sname= ‘ 刘晨 ’ ) = Sdept
+    ```
+
++ 插入
+    ```
+        INSERT INTO table_name ( field1, field2,...fieldN )
+                       VALUES
+                       ( value1, value2,...valueN );
     ```

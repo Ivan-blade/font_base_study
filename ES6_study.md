@@ -445,10 +445,10 @@
             for(let i=0;i<stringArr.length;i++){
             result += stringArr[i];
             if(values[i]){
-            result += values[i];
-                    }
+                 result += values[i];
                 }
-            return result;
+              }
+              return result;
             }
             let name = 'Mike';
             let age = 27;
@@ -663,6 +663,10 @@
             }
             func(55);  // ReferenceError: arguments is not defined
         ```
+    + 普通函数的this指向
+        ```
+            this指针的指向并不是在创建时定义的，而是在被调用时确定的，谁调用了包含this指针的对象，this就会指向该函数的上层，所以在web工程中，当函数中嵌套的函数包含this指针时，this指针无法指向上层函数外的数据对象，这时就需要在上层函数引入_this = this将最外层的this指针引入函数内部
+        ```
     + 箭头函数体中的 this 对象，是定义函数时的对象，而不是使用函数时的对象。
         ```
             function fn(){
@@ -726,3 +730,35 @@
         ```
         problems：for...in和for..of的区别
     + 看样子今天是极限了
+
+### es6其他
++ 参考链接
+    + https://blog.csdn.net/qq_39207948/article/details/80678800
+
++ DOM
++ BOM
++ Ajax
+    + AJAX = Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）。
+    + AJAX 不是新的编程语言，而是一种使用现有标准的新方法。
+    + AJAX 最大的优点是在不重新加载整个页面的情况下，可以与服务器交换数据并更新部分网页内容。
+    + AJAX 不需要任何浏览器插件，但需要用户允许JavaScript在浏览器上执行
++ JSON
+    + JSON 是用于存储和传输数据的格式。
+    + JSON 通常用于服务端向网页传递数据 
+    + 什么是 JSON?
+        + JSON 英文全称 JavaScript Object Notation
+        + JSON 是一种轻量级的数据交换格式。
+        + JSON是独立的语言 *
+        + JSON 易于理解
+    + JSON 语法规则
+        + 数据为 键/值 对。
+        + 数据由逗号分隔。
+        + 大括号保存对象
+        + 方括号保存数组
+    + 常用函数
+        + JSON.parse()	用于将一个 JSON 字符串转换为 JavaScript 对象。
+        + JSON.stringify()	用于将 JavaScript 值转换为 JSON 字符串。
++ Vue生命周期
+    + beforeCreate
+        + 
++ css/js性能优化，解决多浏览器兼容问题

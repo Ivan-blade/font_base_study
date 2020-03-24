@@ -68,3 +68,23 @@
             + 回车进入
             + ALTER user 'root'@'localhost' IDENTIFIED BY '修改后密码';
             + ok了
+#### centos7安装java8
++ yum -y install java-1.8.0-openjdk
++ find / -name java(会罗列出含有java字段文件的目录)
++ 增加环境变量（请cd到对应目录检查一下路径对不对）
+    + vim /etc/profile
+    ```
+        export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
+
+        export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+
+        export PATH=$PATH:$JAVA_HOME/jre/bin
+    ```
+    + source /etc/profile立即生效
++ java -version
+
+#### 打包前后端项目
++ 打包模块化工程 
+    + 参考链接：https://blog.csdn.net/baidu_41885330/article/details/81875395
++ 将webapp打包为原生app
+    + hbuilder了解一下

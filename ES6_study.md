@@ -760,5 +760,32 @@
         + JSON.stringify()	用于将 JavaScript 值转换为 JSON 字符串。
 + Vue生命周期
     + beforeCreate
-        + 
+        + 实例（页面）创建之前的生命周期
+    + created
+        + 实例已经完成数据观测（data），属性方法运算，watch，event事件回调，挂载阶段还未开始el属性不可见
+    + beforemount
+        + 挂载之前被调用，相关渲染函数首次被调用
+    + mounted
+        + el被新创建的vm.$el替换挂载成功
+    + beforeupdate
+        + 数据更新时调用
+    + update
+        +数据更新时
 + css/js性能优化，解决多浏览器兼容问题
+
++ 将嵌套数组转化为一维数组
+    ``` 
+        var arr = ['mu','zi',['dig',['big','love']]]
+        function fun1 (arr) {
+            var res = []
+            for(let i=0;i<arr.length;i++) {
+                if(Array.isArray(arr[i])) {
+                    res = res.concat(fun1(arr[i]))
+                } else {
+                    res.push(arr[i])
+                }
+            }
+            return res
+        }
+        console.log(fun1(arr))
+    ```

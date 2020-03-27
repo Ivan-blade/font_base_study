@@ -21,6 +21,22 @@
         + 安全性问题。如果cookie被人拦截了，那人就可以取得所有的session信息。即使加密也与事无补，因为拦截者并不需要知道cookie的意义，他只要原样转发cookie就可以达到目的了。
         + cookie紧跟域名，同一域名下的请求都会带上cookie，大量调用cookie是对性能的极大浪费
 + css相关
+    + display属性
+        + none
+        + block
+        + inline
+        + inline-block
+        + list-item
+        + table
+        + inline-table
+        + table-row
+        + table-row-group
+        + table-column
+        + table-column-group
+        + table-header-group
+        + table-footer-group
+        + table-cell
+        + inherit
     + display:none和visiblity:hidden的区别
         + display隐藏元素的同时不在分配空间
         + visiblity隐藏元素但是仍然保留空间
@@ -37,8 +53,39 @@
         + 不同点：
             + absolute的”根元素“是可以设置的，而fixed的”根元素“固定为浏览器窗口。当你滚动网页，fixed元素与浏览器窗口之间的距离是不变的。  
     + 盒子模型
-        + 有两种， IE 盒子模型、标准 W3C 盒子模型；IE的content部分包含了 border 和 pading;
+        + 有两种， IE 盒子模型、标准 W3C 盒子模型；IE的content部分包含了 border 和 padding;
         + 盒模型： 内容(content)、填充(padding)、边界(margin)、 边框(border).
+    + flex布局
+        + 属性
+            + flex-direction（主轴方向）
+                + row
+                + row-reverse
+                + column
+                + column-reverse
+            + flex-wrap（换行方式）
+                + nowarp
+                + warp(换行第一行在上方)
+                + warp-reverse（换行，第一行在下方）
+            + flex-flow（direction和wrap的简写）
+            + justify-content（主轴上的对齐方式）
+                + flex-start
+                + flex-end
+                + center
+                + space-between
+                + space-around
+            + align-items（交叉轴上的对齐方式）
+                + flex-start
+                + flex-end 
+                + center 
+                + baseline
+                + stretch;
+            + align-content（多轴线对齐方式，单轴无效）
+                + flex-start
+                + flex-end 
+                + center 
+                + space-between 
+                + space-around 
+                + stretch;
     + CSS 选择符有哪些？哪些属性可以继承？优先级算法如何计算？ CSS3新增伪类有那些？
         + 选择器：
             + id选择器（ # myid）
@@ -50,7 +97,7 @@
             + 通配符选择器（ * ）
             + 属性选择器（a[rel = "external"]）
             + 伪类选择器（a: hover, li:nth-child）
-        + 可继承的样式： font-size font-family color, text-indent;
+        + 可继承的样式： font-size font-family color, text-indent; 
  
         + 不可继承的样式：border padding margin width height ;
  
@@ -84,7 +131,7 @@
                 
                 *relative 
                         生成相对定位的元素，（根据偏移量）相对于其在普通流中的位置（即自身位置）进行定位。 
-                
+
                 * static  默认值。没有定位，元素出现在正常的流中
                 *（忽略 top, bottom, left, right z-index 声明）。
                 
@@ -217,7 +264,7 @@
             + 并行加载脚本
  
         + 缺点：
-            *iframe会阻塞主页面的Onload事件；
+            *iframe会阻塞主页面的Onload事件
             *即时内容为空，加载也需要时间
             *没有语意 
     + 对于网站资源的优化
@@ -333,3 +380,15 @@
             + 使用浮动样式，宽度使用百分比样式
     + 自适应设计
         + 根据不同的设备设计不同的页面
+    + vue双向绑定原理
+        + 通过数据劫持结合发布者订阅者实现
+            + 当将js对象写入data之后
+            + vue将遍历对象所有属性，然后使用object.defineProperty()将属性全部转换为getter/setter
+            + 每组实例都会对应一个watcher，当实例中的setter触发时会通知watcher也就是订阅者，订阅者收到变动通知后会执行指令绑定的回调函数更新视图
+            + 最后是指令解析器
+                + 对每个元素节点的指令进行扫描和解析，根据指令模板替换数据和绑定更新函数
+
+    + 闭包
+        + 定义：闭包是指有权访问另外一个函数作用域中的变量的函数.可以理解为(能够读取其他函数内部变量的函数)
+        + 闭包的作用: 正常函数执行完毕后,里面声明的变量被垃圾回收处理掉,但是闭包可以让作用域里的变量,在函数执行完之后依旧保持没有被垃圾回收处理掉
+            

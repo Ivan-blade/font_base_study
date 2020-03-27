@@ -1,4 +1,4 @@
-+ 遗传算法解决jsp问题
++ 遗传算法解决tsp问题
     + 业务流程
         + 用户在jsp页面输入需要遍历的地点，点击提交到servlet
         + servlet在接收到地点个数之后，组成n*n的二维数据，每个数组单位中的值代表两个地区之间实际的公路距离，之后通过地图api先对地点进行经纬度转换然后得出两地公路距离，填充进二维数组，作为数据源
@@ -40,7 +40,7 @@
     + 项目结构
         + 前端
             + vue框架
-            + vuex配合localstorage进行用户管理
+            + vuex配合localstorage进行用户管理（localstorage是永久储存，sessionstorage当会话结束之后会被清除）
                 + state（定义用户数据）
                 + mutations（修改state中的数据）
                 + getters（获取state中的数据）
